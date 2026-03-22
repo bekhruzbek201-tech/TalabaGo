@@ -1043,6 +1043,56 @@
             50%, 95% { opacity: 1; max-height: 400px; margin-top: 0; padding-top: 14px; padding-bottom: 14px; border-width: 1px; transform: translateY(0); }
             100% { opacity: 0; max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; border-width: 0; transform: translateY(-20px); }
         }
+        /* ------------------ Light Theme Overrides ------------------ */
+        body.light-theme {
+            --bg-dark: #F8FAFC;
+            --bg-surface: rgba(255, 255, 255, 0.85);
+            --bg-card: #FFFFFF;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-tertiary: #94A3B8;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-highlight: rgba(0, 120, 255, 0.25);
+            --glow-blue: rgba(0, 120, 255, 0.15);
+            --glow-yellow: rgba(255, 202, 0, 0.25);
+        }
+        
+        body.light-theme .app-mockup, body.light-theme .tg-mockup {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0,0,0,0.1);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+        }
+        body.light-theme .app-header, body.light-theme .tg-header {
+            background: rgba(0,0,0,0.03);
+            border-bottom-color: rgba(0,0,0,0.05);
+        }
+        body.light-theme .tg-texts strong, body.light-theme .ai-prompt { color: #0F172A; }
+        body.light-theme .user-msg { color: #fff; } /* Brand text remains white */
+        body.light-theme .bot-msg, body.light-theme .doc-attachment { 
+            background: #fff; 
+            border-color: rgba(0,0,0,0.08); 
+            color: #0F172A;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        body.light-theme .doc-info strong, body.light-theme .doc-status { color: #0F172A; }
+        body.light-theme .doc-details { background: #F1F5F9; }
+        
+        body.light-theme .ai-editor { background: #F1F5F9; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.05); }
+        body.light-theme .skeleton-line { background: rgba(0,0,0,0.1); }
+        body.light-theme .glass-orb { background: rgba(255,255,255,0.7); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        
+        body.light-theme .comp-old { background: rgba(0,0,0,0.02); }
+        body.light-theme .comp-new { background: linear-gradient(135deg, rgba(0, 120, 255, 0.08) 0%, #fff 100%); box-shadow: -10px 0 30px rgba(0,0,0,0.02); }
+        body.light-theme .comp-icon { background: rgba(0,0,0,0.05); color: #475569; }
+        
+        body.light-theme header.scrolled { background: rgba(248, 250, 252, 0.85); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        body.light-theme #particles { filter: invert(1) opacity(0.3); }
+        body.light-theme .extreme-cta::before { background: linear-gradient(180deg, rgba(0, 120, 255, 0.1) 0%, #F8FAFC 100%); }
+        body.light-theme .extreme-cta { border-color: var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.03); }
+        body.light-theme .logo img { filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1)); }
+        
+        body.light-theme .doc-footer, body.light-theme .tg-time { border-top-color: rgba(0,0,0,0.05); color: var(--text-secondary); }
+        body.light-theme .cursor-follower { border-color: var(--brand-blue); }
     </style>
 </head>
 <body>
@@ -1070,9 +1120,14 @@
                     <a href="#jarayon" class="interactable">Jarayon</a>
                     <a href="#foyda" class="interactable">Natija</a>
                 </div>
-                <a href="https://t.me/TalabaGoRobot" class="btn btn-outline interactable" style="padding: 12px 24px; font-size: 14px;">
-                    Botga kirish
-                </a>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <button class="btn btn-outline interactable" id="themeToggle" style="padding: 10px 14px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;">
+                        <i data-lucide="sun" id="themeIcon" style="width: 20px; height: 20px;"></i>
+                    </button>
+                    <a href="https://t.me/TalabaGoRobot" class="btn btn-outline interactable" style="padding: 12px 24px; font-size: 14px;">
+                        Botga kirish
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -1282,6 +1337,28 @@
         // Initialize Lucide Icons
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
+        }
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            themeIcon.setAttribute('data-lucide', 'moon');
+            if(typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        if(themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+                const isLight = document.body.classList.contains('light-theme');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                
+                themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+                if(typeof lucide !== 'undefined') lucide.createIcons();
+            });
         }
 
         // 1. Custom Cursor Logic
