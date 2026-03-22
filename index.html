@@ -151,7 +151,6 @@
             background: var(--brand-blue);
             top: -20%;
             left: -10%;
-            animation: breathe 15s infinite alternate ease-in-out;
         }
         
         .glow-2 {
@@ -160,7 +159,6 @@
             background: var(--brand-yellow);
             bottom: -20%;
             right: -10%;
-            animation: breathe 20s infinite alternate-reverse ease-in-out;
         }
 
         @keyframes breathe {
@@ -1249,7 +1247,6 @@
     <!-- Scripts -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script defer src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     
     <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -1257,25 +1254,6 @@
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
-
-        // 0. Initialize Lenis Smooth Scroll
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
-            smooth: true,
-            mouseMultiplier: 1,
-            smoothTouch: false,
-            touchMultiplier: 2,
-            infinite: false,
-        });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
 
         // 1. Custom Cursor Logic
         const cursor = document.querySelector('.cursor');
@@ -1406,20 +1384,8 @@
                 particlesArray[i].draw();
             }
             
-            for(let a = 0; a < particlesArray.length; a++){
-                for(let b = a; b < particlesArray.length; b++){
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
-                                 + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if(distance < 12000) {
-                        ctx.strokeStyle = `rgba(0, 120, 255, ${0.1 - distance/120000})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
+            // Connecting lines removed to prevent GPU/CPU bottlenecking
+            // Focus remains on lightweight drifting particles.
             requestAnimationFrame(animateParticles);
         }
 
